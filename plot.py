@@ -6,14 +6,17 @@ grid_size = (6, 6)
 num_grids = 5             
 block_probability = 0.3  
 
+
 def generate(grid_size, block_probability):
     grid = np.full(grid_size, -1)
     visited = set()
     stack = []
 
-    
-    start = (random.randint(0, grid_size[0] - 1), random.randint(0, grid_size[1] - 1))
-    grid[start] = 0  
+    start = (0, 0)
+    goal = (grid_size[0] - 1, grid_size[1] - 1)
+
+    grid[start] = 0
+    grid[goal] = 0
     visited.add(start)
     stack.append(start)
 
@@ -30,20 +33,21 @@ def generate(grid_size, block_probability):
         if neighbors:
             next_cell = random.choice(neighbors)
             if random.random() < block_probability:
-                grid[next_cell] = 1 
+                if next_cell != start and next_cell != goal:
+                    grid[next_cell] = 1
             else:
-                grid[next_cell] = 0  
+                grid[next_cell] = 0
                 stack.append(next_cell)
-            visited.add(next_cell)  
+            visited.add(next_cell)
         else:
             stack.pop()
 
-        
         if not stack:
             unvisited_cells = np.argwhere(grid == -1)
             if unvisited_cells.size > 0:
                 new_start = tuple(unvisited_cells[random.randint(0, len(unvisited_cells) - 1)])
-                grid[new_start] = 0  
+                if new_start != start and new_start != goal:
+                    grid[new_start] = 0
                 stack.append(new_start)
                 visited.add(new_start)
 
@@ -51,10 +55,9 @@ def generate(grid_size, block_probability):
 
 
 def save_gridworlds(num_grids, grid_size, block_probability):
-    
     folder_name = 'gridworlds'
     if not os.path.exists(folder_name):
-        raise ValueError(f"Folder '{folder_name}' does not exist. Please specify an existing folder.")
+        os.makedirs(folder_name)
     
     grids = []
     for i in range(num_grids):
@@ -69,10 +72,7 @@ def save_gridworlds(num_grids, grid_size, block_probability):
     return grids
 
 def main():
-
     save_gridworlds(num_grids, grid_size, block_probability)
-    
+
 if __name__ == '__main__':
     main()
-
-

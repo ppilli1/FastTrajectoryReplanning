@@ -23,13 +23,13 @@ def is_unreachable(grid, start, goal):
     
     if goal_x > 0 and goal_y > 0: 
         if grid[goal_x - 1, goal_y] == 1 and grid[goal_x, goal_y - 1] == 1:
-            print("Goal is unreachable: blocked from above and left.")
+            print("Goal is unreachable: goal is blocked from above and left.")
             return True
 
     
     if start_x < rows - 1 and start_y < cols - 1: 
         if grid[start_x + 1, start_y] == 1 and grid[start_x, start_y + 1] == 1:
-            print("Start is unreachable: blocked to the right and below.")
+            print("Goal is unreachable: start is blocked to the right and below.")
             return True
 
     return False
@@ -45,31 +45,25 @@ def visualize_grid(grid):
     plt.show()  
         
 def main():
-
-
-    folder_name = 'gridworlds' 
+    folder_name = 'gridworlds'
     save_gridworlds(num_grids, grid_size, block_probability)
 
-    for i in range(6):
+    for i in range(num_grids):
         grid_file_path = os.path.join(folder_name, f'gridworld_{i}.npy')
         grid = np.load(grid_file_path)
         visualize_grid(grid)
-        start = (0, 0)  
-        goal = (grid_size[0] - 1, grid_size[1] - 1) 
+        start = (0, 0)
+        goal = (grid_size[0] - 1, grid_size[1] - 1)
 
         
         if is_unreachable(grid, start, goal):
             print(f"Grid {i}: Start or goal is unreachable. Skipping.")
             continue
 
-        print("going to compare algorithms")
+        
         compare_algorithms(grid, start, goal)
 
-# def tr():
-#     folder_name = 'gridworlds'
-#     grid_file_path = os.path.join(folder_name, f'gridworld_9.npy')
-#     grid = np.load(grid_file_path)
-#     visualize_grid(grid)
+
     
 if __name__ == '__main__':
     main()
